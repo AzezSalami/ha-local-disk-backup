@@ -1,0 +1,39 @@
+# Mount the backup disk into the Supervisor media directory on Home Assistant OS.
+#
+# INSTALL: copy this file to  CONFIG/udev/80-mount-habackup.rules  on a USB
+# stick whose filesystem label is exactly  CONFIG  (FAT32, EXT4 or NTFS).
+# Home Assistant OS imports the udev/ folder into /etc/udev/rules.d at startup.
+# Save with Unix (LF) line endings.
+#
+# This rule matches on the FILESYSTEM LABEL, not on the bus. That means it
+# works for an internal SATA/NVMe disk and an external USB disk alike, and it
+# can never accidentally grab your boot drive the way a "match all USB disks"
+# rule can.
+#
+# PREPARE THE DISK FIRST, on any Linux/Windows/Mac machine:
+#   - one partition, formatted ext4
+#   - filesystem label exactly:  HABACKUP
+#   e.g. on Linux:  sudo mkfs.ext4 -L HABACKUP /dev/sdX1
+#
+# Use ext4. exFAT and FAT32 have no POSIX permissions; NTFS needs the ntfs3
+# driver and is not worth the risk for backups.
+#
+# To use a different label, change BOTH the ID_FS_LABEL match and the
+# mount_point below, then point the integration at the matching /media/ path.
+
+ACTION!="add|remove", GOTO="habackup_end"
+SUBSYSTEM!="block", GOTO="habackup_end"
+ENV{DEVTYPE}!="partition", GOTO="habackup_end"
+ENV{ID_FS_LABEL}!="HABACKUP", GOTO="habackup_end"
+
+# Host path. The Home Assistant container sees this as /media/habackup
+ENV{mount_point}="/mnt/data/supervisor/media/habackup"
+
+ACTION=="add", \
+    RUN{program}+="/usr/bin/mkdir -p %E{mount_point}", \
+    RUN{program}+="/usr/bin/systemd-mount --no-block --collect --fsck=no --options=rw,noatime $devnode %E{mount_point}"
+
+ACTION=="remove", \
+    RUN{program}+="/usr/bin/systemd-umount %E{mount_point}"
+
+LABEL="habackup_end"

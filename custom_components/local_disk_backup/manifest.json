@@ -1,0 +1,12 @@
+{
+  "domain": "local_disk_backup",
+  "name": "Local Disk Backup",
+  "codeowners": ["@YOUR_GITHUB_USERNAME"],
+  "config_flow": true,
+  "documentation": "https://github.com/YOUR_GITHUB_USERNAME/ha-local-disk-backup",
+  "integration_type": "service",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/YOUR_GITHUB_USERNAME/ha-local-disk-backup/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

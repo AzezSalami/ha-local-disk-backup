@@ -1,0 +1,51 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add a backup disk",
+        "description": "Enter the absolute path of a folder on the disk, as seen from inside Home Assistant. Examples: {examples}",
+        "data": {
+          "backup_path": "Folder path",
+          "name": "Name"
+        },
+        "data_description": {
+          "backup_path": "The folder must already exist and be writable by Home Assistant.",
+          "name": "Shown as the location name in the backup page."
+        }
+      }
+    },
+    "error": {
+      "invalid_path": "That is not a valid path.",
+      "not_absolute": "Enter an absolute path, starting with /.",
+      "directory_not_found": "That folder does not exist. Mount the disk first, then try again.",
+      "not_a_directory": "That path is a file, not a folder.",
+      "directory_not_writable": "Home Assistant cannot write to that folder."
+    },
+    "abort": {
+      "already_configured": "That folder is already set up as a backup location."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Retention",
+        "data": {
+          "keep_last": "Backups to keep on this disk"
+        },
+        "data_description": {
+          "keep_last": "Older backups on this disk are deleted after a new one is written. Set to 0 to keep all of them and let Home Assistant's own retention settings decide."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "free_space": {
+        "name": "Free space"
+      },
+      "backup_count": {
+        "name": "Backups stored"
+      }
+    }
+  }
+}
